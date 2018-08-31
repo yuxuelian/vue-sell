@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <v-header/>
+    <!-- 将seller对象传递给header子组件 -->
+    <v-header v-bind:seller="seller"></v-header>
     <div class="tab">
       <div class="tab-item">
         <router-link to="/goods">商品</router-link>
@@ -20,11 +21,37 @@
 <script>
 import VHeader from './components/v-header/v-header'
 
+import axios from 'axios'
+
+const RES_OK = 0
+
 // 导出组件
 export default {
   name: 'App',
+  data () {
+    return {
+      seller: {},
+      goods: {},
+      ratings: {}
+    }
+  },
   components: {
     'v-header': VHeader
+  },
+  created () {
+    axios
+      .get('api/sell/seller', {
+        params: {}
+      })
+      .then((response) => {
+        console.log(response)
+        if (response.data.code === RES_OK) {
+          this.seller = response.data.data
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 }
 </script>

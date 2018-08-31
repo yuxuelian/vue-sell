@@ -4,9 +4,9 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 // 导入路由配置文件 router/index.js
 import routes from './router'
-import axios from 'axios'
 
-const RES_OK = 0
+// 全局导入公共样式
+import './common/stylus/index.styl'
 
 Vue.config.productionTip = false
 
@@ -47,18 +47,6 @@ new Vue({
   },
   created () {
     console.log('组件 created 完成')
-    axios.get('api/sell/ratings', {
-      params: {}
-    })
-      .then(function (response) {
-        console.log(response)
-        if (response.data.errno === RES_OK) {
-          console.log(response.data.data)
-        }
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
   },
   beforeMount () {
     console.log('组件 beforeMounte 完成')
