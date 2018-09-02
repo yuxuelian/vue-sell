@@ -6,18 +6,20 @@
 
 <script>
 export default {
-  name: "seller",
+  name: 'seller',
   components: {},
   props: {},
   data() {
-    return {};
+    return {}
   },
   watch: {},
   computed: {},
   methods: {},
-  created() {},
-  mounted() {}
-};
+  created() {
+  },
+  mounted() {
+  }
+}
 </script>
 
 <style lang="stylus" scoped>

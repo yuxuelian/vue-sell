@@ -6,18 +6,20 @@
 
 <script>
 export default {
-  name: "ratings",
+  name: 'ratings',
   components: {},
   props: {},
   data() {
-    return {};
+    return {}
   },
   watch: {},
   computed: {},
   methods: {},
-  created() {},
-  mounted() {}
-};
+  created() {
+  },
+  mounted() {
+  }
+}
 </script>
 
 <style lang="stylus" scoped>
