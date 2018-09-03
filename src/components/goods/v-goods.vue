@@ -1,6 +1,6 @@
 <template>
   <div class="goods">
-    <div class="menu-wrapper">
+    <div class="menu-wrapper" ref="menuWrapper">
       <ul>
         <li v-for="item of goods" :key="item.name" class="menu-item">
           <span class="text border-1px">
@@ -9,7 +9,7 @@
         </li>
       </ul>
     </div>
-    <div class="foods-wrapper">
+    <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
         <li class="foods-list" v-for="item of goods" :key="item.name">
           <h1 class="title">{{item.name}}</h1>
@@ -39,6 +39,9 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+
+import BScroll from 'better-scroll'
 import axios from 'axios'
 
 const RES_OK = 0
@@ -74,6 +77,10 @@ export default {
       })
   },
   mounted() {
+    let menuWrapper = this.$refs.menuWrapper
+    const menScroll = new BScroll(menuWrapper)
+    let foodsWrapper = this.$refs.foodsWrapper
+    const foodsScroll = new BScroll(foodsWrapper)
   }
 }
 </script>
@@ -166,7 +173,7 @@ export default {
           .now
             margin-right 8px
             font-size 14px
-            color rgb(240,20,20)
+            color rgb(240, 20, 20)
           .old
             text-decoration line-through
             font-size 10px
