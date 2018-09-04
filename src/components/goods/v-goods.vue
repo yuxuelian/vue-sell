@@ -1,5 +1,6 @@
 <template>
-  <div class="goods">
+  <div class="v-goods">
+    <!--左边分类菜单-->
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
         <li v-for="(item,index) of goods" :key="item.name" class="menu-item"
@@ -11,15 +12,18 @@
         </li>
       </ul>
     </div>
+    <!--右边商品列表-->
     <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
         <li class="foods-list" v-for="item of goods" :key="item.name" ref="foodList">
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li v-for="food in item.foods" :key="food.name" class="food-item border-1px">
+              <!--商品图标-->
               <div class="icon">
                 <img :src="food.icon" width="57" height="57"/>
               </div>
+              <!--商品内容-->
               <div class="content">
                 <h2 class="name">{{food.name}}</h2>
                 <p class="desc">{{food.description}}</p>
@@ -32,23 +36,35 @@
                   <span class="old" v-if="food.oldPrice">¥{{food.oldPrice}}</span>
                 </div>
               </div>
+              <!--购物的按钮组件-->
+              <div class="cartcontrol-wrapper">
+                <cartcontrol :food="food"></cartcontrol>
+              </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
+    <!--底部购物车组件-->
+    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"
+              :selectFoods="selectFoods"></shopcart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+import shopcart from '../shopcart/shopcart'
+import cartcontrol from '../cartcontrol/cartcontrol'
 import BScroll from 'better-scroll'
 import axios from 'axios'
 
 const RES_OK = 0
 
 export default {
-  name: 'goods',
-  components: {},
+  name: 'v-goods',
+  components: {
+    shopcart,
+    cartcontrol
+  },
   props: {
     seller: {
       type: Object
@@ -73,6 +89,17 @@ export default {
           return i
         }
       }
+    },
+    selectFoods() {
+      let foods = []
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            foods.push(food)
+          }
+        })
+      })
+      return foods
     }
   },
   created() {
@@ -155,7 +182,7 @@ export default {
 
 <style lang="stylus" scoped>
   @import "../../common/stylus/mixin";
-  .goods
+  .v-goods
     display flex
     overflow hidden
     position absolute
@@ -249,4 +276,8 @@ export default {
           .old
             text-decoration line-through
             font-size 10px
+        .cartcontrol-wrapper
+          position absolute
+          right 0
+          bottom 12px
 </style>
