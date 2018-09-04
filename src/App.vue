@@ -42,7 +42,6 @@ export default {
         params: {}
       })
       .then((response) => {
-        console.log(response)
         if (response.data.code === RES_OK) {
           this.seller = response.data.data
         }

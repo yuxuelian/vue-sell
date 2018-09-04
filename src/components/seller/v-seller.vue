@@ -1,12 +1,12 @@
 <template>
-  <div class="v-seller">
-    seller
+  <div class="wrapper">
+
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 export default {
-  name: 'seller',
+  name: 'v-seller',
   components: {},
   props: {},
   data() {
@@ -22,5 +22,6 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus" rel="stylesheet/stylus">
+
 </style>

@@ -2,7 +2,9 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="item of goods" :key="item.name" class="menu-item">
+        <li v-for="(item,index) of goods" :key="item.name" class="menu-item"
+            :class="{'menu-item-selected':currentIndex === index}"
+            @click="selectMenu(index,$event)" ref="menuList">
           <span class="text border-1px">
             <span v-show="item.type !== -1" class="icon" :class="classMap[item.type]"></span>{{item.name}}
           </span>
@@ -11,7 +13,7 @@
     </div>
     <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
-        <li class="foods-list" v-for="item of goods" :key="item.name">
+        <li class="foods-list" v-for="item of goods" :key="item.name" ref="foodList">
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li v-for="food in item.foods" :key="food.name" class="food-item border-1px">
@@ -38,9 +40,7 @@
   </div>
 </template>
 
-<script>
-/* eslint-disable no-unused-vars */
-
+<script type="text/ecmascript-6">
 import BScroll from 'better-scroll'
 import axios from 'axios'
 
@@ -56,31 +56,99 @@ export default {
   },
   data() {
     return {
-      goods: []
+      goods: [],
+      classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
+      listHeight: [],
+      scrollY: 0
     }
   },
   watch: {},
-  computed: {},
-  methods: {},
-  created() {
-    this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
-    axios.get('/api/goods', {
-      params: {}
-    }).then((response) => {
-      console.log(response)
-      if (response.data.code === RES_OK) {
-        this.goods = response.data.data
+  computed: {
+    currentIndex() {
+      for (let i = 0; i < this.listHeight.length; i++) {
+        let height1 = this.listHeight[i]
+        let height2 = this.listHeight[i + 1]
+        if (this.scrollY >= height1 && this.scrollY < height2) {
+          this._followScroll(i)
+          return i
+        }
       }
-    })
-      .catch((error) => {
-        console.log(error)
-      })
+    }
+  },
+  created() {
+    this._loadData()
   },
   mounted() {
-    let menuWrapper = this.$refs.menuWrapper
-    const menScroll = new BScroll(menuWrapper)
-    let foodsWrapper = this.$refs.foodsWrapper
-    const foodsScroll = new BScroll(foodsWrapper)
+  },
+  methods: {
+    // 点击menuItem的时候触发
+    selectMenu(index, event) {
+      if (!event._constructed) {
+        return
+      }
+      let foodList = this.$refs.foodList
+      let el = foodList[index]
+      // 300 表示有一个滑动过度效果
+      this.foodsScroll.scrollToElement(el, 300)
+    },
+    // 加载数据
+    _loadData() {
+      axios
+        .get('/api/sell/goods', {
+          params: {}
+        })
+        .then((response) => {
+          if (response.data.code === RES_OK) {
+            // 更新数据，触发dom更新
+            this.goods = response.data.data
+            // 设置dom更新完成回调
+            this.$nextTick(() => {
+              // 初始化滚动
+              this._initScroll()
+              // 计算一下列表的高度
+              this._calculateHeight()
+            })
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    _initScroll() {
+      this.menuScroll = new BScroll(this.$refs.menuWrapper, {
+        click: true
+      })
+      // probeType  3  表示swipe的时候也继续监听
+      this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+        click: true,
+        probeType: 3
+      })
+      // 监听滚动事件
+      this.foodsScroll.on('scroll', (pos) => {
+        // 更新ScrollY的高度，触发currentIndex实时去计算位置
+        // 判断滑动方向，避免下拉时分类高亮错误（如第一分类商品数量为1时，下拉使得第二分类高亮）
+        if (pos.y <= 0) {
+          this.scrollY = Math.abs(Math.round(pos.y))
+        }
+      })
+    },
+    // 计算每类食物列表相对于顶部的高度
+    _calculateHeight() {
+      let foodList = this.$refs.foodList
+      let height = 0
+      this.listHeight.push(height)
+      for (let i = 0; i < foodList.length; i++) {
+        let item = foodList[i]
+        height += item.clientHeight
+        this.listHeight.push(height)
+      }
+    },
+    // 使menu列表跟随滚动
+    _followScroll(index) {
+      let menuList = this.$refs.menuList
+      let el = menuList[index]
+      this.menuScroll.scrollToElement(el, 300, 0, -100)
+    }
   }
 }
 </script>
@@ -128,6 +196,10 @@ export default {
           vertical-align middle
           font-size 12px
           border-1px(rgba(7, 17, 27, 0.1))
+        &.menu-item-selected
+          color red
+          font-weight 700
+          background-color white
     .foods-wrapper
       flex 1
       .title

@@ -3,8 +3,8 @@
     <!-- 内容区 -->
     <div class="content-wrapper">
       <!-- 左侧头像 -->
-      <div class="avatar">
-        <img v-bind:src="seller.avatar" alt="头像">
+      <div class="avatar-wrapper">
+        <img v-bind:src="seller.avatar" class="avatar-img" alt="头像" width="64px" height="64px">
       </div>
       <!-- 右侧三行 -->
       <div class="content">
@@ -31,12 +31,12 @@
     </div>
     <!-- 公告 -->
     <div class="bulletin-wrapper" @click="showDetail">
-      <span class="bulletin-title"></span><span class="bulletin-text">{{seller.bulletin}}</span>
-      <i class="icon-keyboard_arrow_right"></i>
+      <span class="bulletin-title"></span><span class="bulletin-text">{{seller.bulletin}}</span><i
+      class="icon-keyboard_arrow_right"></i>
     </div>
     <!-- 背景 -->
     <div class="background">
-      <img :src="seller.avatar" alt="背景图">
+      <img :src="seller.avatar" alt="背景图" width="100%" height="100%">
     </div>
     <!-- 弹出层 stick footers -->
     <transition name="fade">
@@ -57,7 +57,7 @@
             <ul v-if="seller.supports" class="supports">
               <li class="support-item" v-for="(item,index) in seller.supports" :key="index">
                 <span class="icon" :class="classMap[item.type]"></span>
-                <span class="text">{{item.description}}}</span>
+                <span class="text">{{item.description}}</span>
               </li>
             </ul>
             <!--第二个小标题-->
@@ -125,15 +125,14 @@ export default {
       padding 24px 12px 18px 24px
       font-size 0
       position relative
-      .avatar
+      .avatar-wrapper
         display inline-block
         vertical-align top
-        img
+        .avatar-img
           border-radius 2px
-          width 64px
-          height 64px
       .content
         display inline-block
+        vertical-align top
         font-size 14px
         margin-left 16px
         .title
@@ -198,32 +197,31 @@ export default {
           line-height 24px
           margin-left 2px
     .bulletin-wrapper
-      position relative
+      display flex
+      flex-direction row
+      align-items center
+      flex-wrap nowrap
+      justify-content space-between
       height 28px
-      line-height 28px
-      padding 0 22px 0 12px
-      white-space nowrap
-      overflow hidden
-      text-overflow ellipsis
+      width 100%
+      font-size 10px
       background-color rgba(7, 17, 27, 0.2)
       .bulletin-title
-        vertical-align top
         display inline-block
         width 22px
         height 12px
-        margin-top 8px
-        bg-image('bulletin')
+        margin-left 16px
         background-size 22px 12px
         background-repeat no-repeat
+        bg-image('bulletin')
       .bulletin-text
-        vertical-align top
-        font-size 10px
+        flex 1
         margin 0 4px
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
       .icon-keyboard_arrow_right
-        position absolute
-        font-size 10px
-        right 12px
-        top 8px
+        margin 2px 12px 0 0
     .background
       position absolute
       top 0
@@ -232,9 +230,6 @@ export default {
       height 100%
       z-index -1
       filter blur(10px)
-      img
-        width 100%
-        height 100%
     .detail
       position fixed
       z-index 100
