@@ -36,9 +36,9 @@
                   <span class="old" v-if="food.oldPrice">¥{{food.oldPrice}}</span>
                 </div>
               </div>
-              <!--购物的按钮组件-->
+              <!--购物的按钮组件 cartAdd 监听子组件向我(this)传的值-->
               <div class="cartcontrol-wrapper">
-                <cartcontrol :food="food"></cartcontrol>
+                <cartcontrol :food="food" @cartAdd="cartAdd"></cartcontrol>
               </div>
             </li>
           </ul>
@@ -46,7 +46,7 @@
       </ul>
     </div>
     <!--底部购物车组件-->
-    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"
+    <shopcart ref="shopcart" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"
               :selectFoods="selectFoods"></shopcart>
   </div>
 </template>
@@ -108,6 +108,10 @@ export default {
   mounted() {
   },
   methods: {
+    cartAdd(targetDom) {
+      // 将拿到的这个dom元素传递给shopcart组件
+      this._drop(targetDom)
+    },
     // 点击menuItem的时候触发
     selectMenu(index, event) {
       if (!event._constructed) {
@@ -117,6 +121,10 @@ export default {
       let el = foodList[index]
       // 300 表示有一个滑动过度效果
       this.foodsScroll.scrollToElement(el, 300)
+    },
+    _drop(targetDom) {
+      // 父组件调用子组件方法
+      this.$refs.shopcart.drop(targetDom)
     },
     // 加载数据
     _loadData() {
@@ -279,5 +287,5 @@ export default {
         .cartcontrol-wrapper
           position absolute
           right 0
-          bottom 12px
+          bottom 10px
 </style>

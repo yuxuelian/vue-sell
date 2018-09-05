@@ -201,10 +201,9 @@ export default {
       flex-direction row
       align-items center
       flex-wrap nowrap
-      justify-content space-between
       height 28px
       width 100%
-      font-size 10px
+      font-size 12px
       background-color rgba(7, 17, 27, 0.2)
       .bulletin-title
         display inline-block
@@ -216,7 +215,7 @@ export default {
         bg-image('bulletin')
       .bulletin-text
         flex 1
-        margin 0 4px
+        padding 0 4px
         white-space nowrap
         overflow hidden
         text-overflow ellipsis

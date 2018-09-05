@@ -1,5 +1,6 @@
 <template>
   <div class="shopcart">
+    <!--购物车内容-->
     <div class="content">
       <div class="content-left">
         <!--logo部分-->
@@ -20,29 +21,48 @@
         </div>
       </div>
     </div>
+    <!--购物车小球动画-->
+    <div class="ball-container">
+      <transition name="drop"
+                  @before-enter="beforeEnter"
+                  @enter="enter"
+                  @after-enter="afterEnter"
+                  :css="false"
+                  v-for="(item,index) in balls" :key="index">
+        <div v-show="item.show" class="ball-item"></div>
+      </transition>
+    </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+import Velocity from 'velocity-animate'
+
 export default {
   name: 'shopcart',
   components: {},
   props: {
+    // 所选食物列表,由父组件传入
     selectFoods: {
       type: Array,
       default() {
         return []
       }
     },
+    // 配送费
     deliveryPrice: {
       type: Number
     },
+    // 最小费用
     minPrice: {
       type: Number
     }
   },
   data() {
-    return {}
+    return {
+      balls: [{show: false}, {show: false}, {show: false}, {show: false}, {show: false}],
+      dropBalls: []
+    }
   },
   watch: {},
   computed: {
@@ -77,7 +97,51 @@ export default {
       }
     }
   },
-  methods: {},
+  methods: {
+    drop(el) {
+      // 遍历取出第一个没有执行动画的小球 并放入dropBalls
+      for (let i = 0, length = this.balls.length; i < length; i++) {
+        let ball = this.balls[i]
+        if (!ball.show) {
+          // 将这个球显示出来,触发动画钩子函数
+          ball.show = true
+          // 获取到了从cartcontrol组件中经共同父组件传递过来的dom对象 并保存到小球中去
+          ball.el = el
+          this.dropBalls.push(ball)
+          break
+        }
+      }
+    },
+    beforeEnter(el) {
+      // 显示出小球
+      el.style.display = ''
+    },
+    enter(el, done) {
+      let ball = this.dropBalls.shift()
+      // 获取到所点击Dom的xy坐标
+      let rect = ball.el.getBoundingClientRect()
+      let left = rect.left + 12
+      let bottom = window.innerHeight - rect.bottom + 12
+
+      // 开始执行动画
+      Velocity(el, 'stop', true)
+      Velocity(el, {
+        left: [32, left],
+        bottom: [22, bottom]
+      }, {
+        duration: 3000,
+        easing: [0.49, -0.29, 0.75, 0.41],
+        complete: () => {
+          ball.show = false
+          done()
+        }
+      })
+    },
+    afterEnter(el) {
+      // 动画执行结束
+      el.style.display = 'none'
+    }
+  },
   created() {
   },
   mounted() {
@@ -172,4 +236,14 @@ export default {
           &.enough
             background-color #00b43c
             color white
+    .ball-container
+      .ball-item
+        position fixed
+        left 32px
+        bottom 22px
+        z-index 200
+        width 16px
+        height 16px
+        border-radius 50%
+        background-color rgb(0, 160, 220)
 </style>

@@ -18,13 +18,11 @@ const router = new VueRouter({
 
 // 如果开始跳转
 router.beforeEach(function(to, from, next) {
-  console.log(`-----------beforeEach---${to}  ${from}----------`)
   next()
 })
 
 // 路由跳转结束
 router.afterEach(function(to, from) {
-  console.log(`-----------afterEach---${to}  ${from}----------`)
 })
 
 /* eslint-disable no-new */
@@ -42,27 +40,19 @@ new Vue({
   // 挂载组件
   template: '<App/>',
   beforeCreate() {
-    console.log('组件 beforeCreate 完成')
   },
   created() {
-    console.log('组件 created 完成')
   },
   beforeMount() {
-    console.log('组件 beforeMounte 完成')
   },
   mounted() {
-    console.log('组件 mounted 完成')
   },
   beforeUpdate() {
-    console.log('组件 beforeUpdate 完成')
   },
   updated() {
-    console.log('组件 updated 完成')
   },
   beforeDestroye() {
-    console.log('组件 beforeDestroye 完成')
   },
   destroyed() {
-    console.log('组件 destroyed 完成')
   }
 })

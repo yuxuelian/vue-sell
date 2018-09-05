@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="v-ratings">
 
   </div>
 </template>
@@ -18,6 +18,8 @@ export default {
   created() {
   },
   mounted() {
+  },
+  transitions: {
   }
 }
 </script>

@@ -1,21 +1,18 @@
 <template>
   <div class="cartcontrol">
-    <transition
-      v-on:before-enter="beforeEnter"
-      v-on:enter="enter"
-      v-on:leave="leave"
-      v-bind:css="false">
+    <transition>
       <div class="cart-decrease icon-remove_circle_outline" v-show="food.count>0"
            @click="decreaseCount($event)"></div>
     </transition>
-    <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
+    <transition>
+      <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
+    </transition>
     <div class="cart-add icon-add_circle" @click="addCount($event)"></div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Vue from 'vue'
-import Velocity from 'velocity-animate'
 
 export default {
   name: 'cartcontrol',
@@ -31,18 +28,6 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    beforeEnter(el) {
-      el.style.opacity = 0
-      el.style.translateX = '0px'
-    },
-    enter(el, done) {
-      Velocity(el, {translateX: '24px', rotateZ: '180deg', opacity: 0}, {duration: 300})
-      Velocity(el, {translateX: '0px', rotateZ: '0deg', opacity: 1}, {complete: done})
-    },
-    leave(el, done) {
-      Velocity(el, {translateX: '0px', rotateZ: '0deg', opacity: 1}, {duration: 300})
-      Velocity(el, {translateX: '24px', rotateZ: '180deg', opacity: 0}, {complete: done})
-    },
     addCount(event) {
       if (!event._constructed) {
         return
@@ -55,6 +40,9 @@ export default {
       } else {
         this.food.count++
       }
+      // 当前组件向它所在的父组件传值
+      // 第二个参数this.childValue是需要传的值
+      this.$emit('cartAdd', event.target)
     },
     decreaseCount(event) {
       if (!event._constructed) {
@@ -74,6 +62,7 @@ export default {
 
 <style lang="stylus" rel="stylesheet/stylus">
   .cartcontrol
+    position relative
     font-size 0
     .cart-decrease, .cart-add
       display inline-block
@@ -83,15 +72,30 @@ export default {
       padding 6px
       color rgb(0, 160, 220)
     .cart-count
-      display inline-block
-      vertical-align top
+      position absolute
       font-size 10px
       width 12px
-      padding-top 6px
-      line-height 24px
-      text-align center
       color rgb(147, 153, 159)
-
-  /*.cart-decrease*/
-  /*.cart-add*/
+      top 12px
+      left 36px
+      text-align center
+      transform-origin center center
+      &.v-enter-active
+        transition all .5s ease
+      &.v-leave-active
+        transition all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+      &.v-enter, &.v-leave-to
+        transform translateX(30px) rotateZ(360deg)
+        opacity 0
+    .cart-add
+      margin-left 12px
+    .cart-decrease
+      transform-origin center center
+      &.v-enter-active
+        transition all .5s ease
+      &.v-leave-active
+        transition all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+      &.v-enter, &.v-leave-to
+        transform translateX(48px) rotateZ(360deg)
+        opacity 0
 </style>
