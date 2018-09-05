@@ -81,9 +81,9 @@ export default {
       text-align center
       transform-origin center center
       &.v-enter-active
-        transition all .5s ease
+        transition all .3s linear
       &.v-leave-active
-        transition all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+        transition all .3s linear
       &.v-enter, &.v-leave-to
         transform translateX(30px) rotateZ(360deg)
         opacity 0
@@ -92,9 +92,9 @@ export default {
     .cart-decrease
       transform-origin center center
       &.v-enter-active
-        transition all .5s ease
+        transition all .3s linear
       &.v-leave-active
-        transition all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+        transition all .3s linear
       &.v-enter, &.v-leave-to
         transform translateX(48px) rotateZ(360deg)
         opacity 0

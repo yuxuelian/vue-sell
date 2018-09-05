@@ -1,6 +1,6 @@
 <template>
   <div class="v-ratings">
-
+    评论
   </div>
 </template>
 
@@ -19,8 +19,7 @@ export default {
   },
   mounted() {
   },
-  transitions: {
-  }
+  transitions: {}
 }
 </script>
 

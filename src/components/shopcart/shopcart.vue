@@ -1,7 +1,7 @@
 <template>
   <div class="shopcart">
     <!--购物车内容-->
-    <div class="content">
+    <div class="content" @click="toggleList">
       <div class="content-left">
         <!--logo部分-->
         <div class="logo-wrapper">
@@ -24,23 +24,51 @@
     <!--购物车小球动画-->
     <div class="ball-container">
       <transition name="drop"
-                  @before-enter="beforeEnter"
-                  @enter="enter"
-                  @after-enter="afterEnter"
-                  :css="false"
-                  v-for="(item,index) in balls" :key="index">
-        <div v-show="item.show" class="ball-item"></div>
+                  v-on:before-enter="beforeEnter"
+                  v-on:enter="enter"
+                  v-on:after-enter="afterEnter"
+                  v-for="(item,index) in balls"
+                  :key="index">
+        <div v-show="item.show" class="ball">
+          <div class="inner inner-hock"></div>
+        </div>
       </transition>
     </div>
+    <!--购物车详情-->
+    <transition name="shopcart-list">
+      <div class="shopcart-list" v-show="listShow">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty">清空</span>
+        </div>
+        <div class="list-content" ref="listContent">
+          <ul>
+            <li class="food border-1px" v-for="food in selectFoods" :key="food.name">
+              <span class="name">{{food.name}}</span>
+              <div class="price">
+                <span>¥{{food.price*food.count}}</span>
+              </div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol :food="food"></cartcontrol>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Velocity from 'velocity-animate'
+// import Velocity from 'velocity-animate'
+import cartcontrol from '../cartcontrol/cartcontrol'
+import BScroll from 'better-scroll'
 
 export default {
   name: 'shopcart',
-  components: {},
+  components: {
+    cartcontrol
+  },
   props: {
     // 所选食物列表,由父组件传入
     selectFoods: {
@@ -61,7 +89,8 @@ export default {
   data() {
     return {
       balls: [{show: false}, {show: false}, {show: false}, {show: false}, {show: false}],
-      dropBalls: []
+      dropBalls: [],
+      fold: false
     }
   },
   watch: {},
@@ -95,9 +124,32 @@ export default {
       } else {
         return '去结算'
       }
+    },
+    // 是否显示购物车列表
+    listShow() {
+      if (this.totalCount > 0 && this.fold) {
+        this.$nextTick(() => {
+          if (!this.scroll) {
+            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+            this.scroll = new BScroll(this.$refs.listContent, {
+              click: true
+            })
+          } else {
+            this.scroll.refresh()
+          }
+        })
+        return true
+      }
+      return false
     }
   },
   methods: {
+    // 点击购物车
+    toggleList() {
+      if (this.totalCount > 0) {
+        this.fold = !this.fold
+      }
+    },
     drop(el) {
       // 遍历取出第一个没有执行动画的小球 并放入dropBalls
       for (let i = 0, length = this.balls.length; i < length; i++) {
@@ -113,33 +165,39 @@ export default {
       }
     },
     beforeEnter(el) {
-      // 显示出小球
-      el.style.display = ''
-    },
-    enter(el, done) {
-      let ball = this.dropBalls.shift()
-      // 获取到所点击Dom的xy坐标
-      let rect = ball.el.getBoundingClientRect()
-      let left = rect.left + 12
-      let bottom = window.innerHeight - rect.bottom + 12
-
-      // 开始执行动画
-      Velocity(el, 'stop', true)
-      Velocity(el, {
-        left: [32, left],
-        bottom: [22, bottom]
-      }, {
-        duration: 3000,
-        easing: [0.49, -0.29, 0.75, 0.41],
-        complete: () => {
-          ball.show = false
-          done()
+      let count = this.balls.length
+      while (count--) {
+        let ball = this.balls[count]
+        if (ball.show) {
+          let rect = ball.el.getBoundingClientRect()
+          let x = rect.left - 32
+          let y = -(window.innerHeight - rect.top - 22)
+          el.style.display = ''
+          el.style.webkitTransform = `translate3d(0,${y}px,0)`
+          el.style.transform = `translateY(${y}px)`
+          let inner = el.getElementsByClassName('inner-hock')[0]
+          inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`
+          inner.style.transform = `translateX(${x}px)`
         }
+      }
+    },
+    enter(el) {
+      /* eslint-disable no-unused-vars */
+      let rf = el.offsetHeight
+      this.$nextTick(() => {
+        el.style.webkitTransform = 'translate3d(0, 0, 0)'
+        el.style.transform = 'translateY(0)'
+        let inner = el.getElementsByClassName('inner-hock')[0]
+        inner.style.webkitTransform = 'translate3d(0, 0, 0)'
+        inner.style.transform = 'translateX(0)'
       })
     },
     afterEnter(el) {
-      // 动画执行结束
-      el.style.display = 'none'
+      let ball = this.dropBalls.shift()
+      if (ball) {
+        ball.show = false
+        el.style.display = 'none'
+      }
     }
   },
   created() {
@@ -150,8 +208,10 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
+  @import "../../common/stylus/mixin";
+
   .shopcart
-    position fixed
+    position absolute
     left 0
     bottom 0
     z-index 50
@@ -237,13 +297,72 @@ export default {
             background-color #00b43c
             color white
     .ball-container
-      .ball-item
+      .ball
         position fixed
         left 32px
         bottom 22px
         z-index 200
-        width 16px
-        height 16px
-        border-radius 50%
-        background-color rgb(0, 160, 220)
+        transition all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+        .inner
+          width 16px
+          height 16px
+          border-radius 50%
+          background rgb(0, 160, 220)
+          transition all 0.4s linear
+    .shopcart-list
+      position fixed
+      top 0
+      left 0
+      z-index -1
+      width 100%
+      &.shopcart-list-enter-active
+        transition all .5s linear
+        transform translateY(-100%)
+      &.shopcart-list-enter
+        transform translateY(0)
+      &.shopcart-list-leave-active
+        transition all .5s linear
+        transform translateY(0)
+      &.shopcart-list-leave-to
+        transform translateY(-100%)
+      .list-header
+        line-height 40px
+        padding 0 18px
+        height 40px
+        border-bottom 1px solid rgba(7, 17, 27, 0.1)
+        background-color #f3f5f7
+        .title
+          float left
+          font-size 14px
+          color rgb(7, 17, 27)
+        .empty
+          float right
+          color rgb(0, 160, 220)
+          font-size 12px
+      .list-content
+        background-color white
+        overflow hidden
+        max-height 217px
+        padding 0 18px
+        .food
+          position relative
+          box-sizing border-box
+          border-1px(rgba(7, 17, 27, 0.1))
+          padding 12px 0
+          .name
+            font-size 14px
+            color rgb(7, 17, 27)
+            line-height 24px
+          .price
+            right 90px
+            bottom 12px
+            line-height 24px
+            font-size 14px
+            font-weight 700
+            color rgb(240, 20, 20)
+            position absolute
+          .cartcontrol-wrapper
+            right 0
+            bottom 6px
+            position absolute
 </style>

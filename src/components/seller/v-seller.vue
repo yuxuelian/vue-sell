@@ -1,6 +1,6 @@
 <template>
   <div class="v-seller">
-
+    商家
   </div>
 </template>
 
