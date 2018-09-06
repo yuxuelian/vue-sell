@@ -4,7 +4,7 @@
     <div class="content-wrapper">
       <!-- 左侧头像 -->
       <div class="avatar-wrapper">
-        <img v-bind:src="seller.avatar" class="avatar-img" alt="头像" width="64px" height="64px">
+        <img v-bind:src="seller.avatar" class="avatar-img" alt="头像" width="64" height="64">
       </div>
       <!-- 右侧三行 -->
       <div class="content">

@@ -2,12 +2,13 @@
   <div class="cartcontrol">
     <transition>
       <div class="cart-decrease icon-remove_circle_outline" v-show="food.count>0"
-           @click="decreaseCount($event)"></div>
+           @click.stop.prevent="decreaseCount($event)"></div>
     </transition>
     <transition>
       <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
     </transition>
-    <div class="cart-add icon-add_circle" @click="addCount($event)"></div>
+    <!--click.stop阻止单击事件冒泡 click.prevent阻止默认事件(如submit提交后的刷新页面事件)   click.stop.prevent串联同时阻止-->
+    <div class="cart-add icon-add_circle" @click.stop.prevent="addCount($event)"></div>
   </div>
 </template>
 
@@ -90,6 +91,7 @@ export default {
     .cart-add
       margin-left 12px
     .cart-decrease
+      z-index -10
       transform-origin center center
       &.v-enter-active
         transition all .3s linear

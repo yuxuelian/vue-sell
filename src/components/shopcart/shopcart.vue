@@ -34,27 +34,32 @@
         </div>
       </transition>
     </div>
-    <!--购物车详情-->
+    <!--购物车详情列表-->
     <transition name="shopcart-list">
       <div class="shopcart-list" v-show="listShow">
         <div class="list-header">
           <h1 class="title">购物车</h1>
-          <span class="empty">清空</span>
+          <span class="empty" @click="clearCart">清空</span>
         </div>
         <div class="list-content" ref="listContent">
           <ul>
-            <li class="food border-1px" v-for="food in selectFoods" :key="food.name">
+            <li class="food border-1px" v-for="(food,index) in selectFoods" :key="index">
               <span class="name">{{food.name}}</span>
               <div class="price">
                 <span>¥{{food.price*food.count}}</span>
               </div>
               <div class="cartcontrol-wrapper">
-                <cartcontrol :food="food"></cartcontrol>
+                <!--drop方法用来触发小球弹跳动画-->
+                <cartcontrol :food="food" @cartAdd="drop"></cartcontrol>
               </div>
             </li>
           </ul>
         </div>
       </div>
+    </transition>
+    <!--购物车列表遮罩-->
+    <transition name="fade">
+      <div class="list-mask" @click="hideList" v-show="listShow"></div>
     </transition>
   </div>
 </template>
@@ -102,6 +107,7 @@ export default {
       //   let food = this.selectFoods[i]
       //   total += food.count * food.price
       // }
+      // 这种循环方式更简洁
       this.selectFoods.forEach((food) => {
         total += food.count * food.price
       })
@@ -140,16 +146,28 @@ export default {
         })
         return true
       }
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.fold = false
       return false
     }
   },
   methods: {
+    hideList() {
+      this.fold = false
+    },
+    // 清空购物车
+    clearCart() {
+      this.selectFoods.forEach((food) => {
+        food.count = 0
+      })
+    },
     // 点击购物车
     toggleList() {
       if (this.totalCount > 0) {
         this.fold = !this.fold
       }
     },
+    // 执行一次小球弹跳动画
     drop(el) {
       // 遍历取出第一个没有执行动画的小球 并放入dropBalls
       for (let i = 0, length = this.balls.length; i < length; i++) {
@@ -211,7 +229,7 @@ export default {
   @import "../../common/stylus/mixin";
 
   .shopcart
-    position absolute
+    position fixed
     left 0
     bottom 0
     z-index 50
@@ -310,21 +328,19 @@ export default {
           background rgb(0, 160, 220)
           transition all 0.4s linear
     .shopcart-list
-      position fixed
+      position absolute
       top 0
       left 0
       z-index -1
       width 100%
+      transform: translate3d(0, -100%, 0);
       &.shopcart-list-enter-active
-        transition all .5s linear
+        transition all .4s linear
         transform translateY(-100%)
-      &.shopcart-list-enter
-        transform translateY(0)
       &.shopcart-list-leave-active
-        transition all .5s linear
+        transition all .4s linear
+      &.shopcart-list-enter, &.shopcart-list-leave-to
         transform translateY(0)
-      &.shopcart-list-leave-to
-        transform translateY(-100%)
       .list-header
         line-height 40px
         padding 0 18px
@@ -365,4 +381,19 @@ export default {
             right 0
             bottom 6px
             position absolute
+    .list-mask
+      position: fixed
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      z-index: -40
+      backdrop-filter: blur(10px)
+      opacity: 1
+      background: rgba(7, 17, 27, 0.6)
+      &.fade-enter-active, &.fade-leave-active
+        transition: all 0.5s
+      &.fade-enter, &.fade-leave-active
+        opacity: 0
+        background: rgba(7, 17, 27, 0)
 </style>

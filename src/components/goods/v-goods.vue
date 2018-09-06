@@ -18,7 +18,8 @@
         <li class="foods-list" v-for="item of goods" :key="item.name" ref="foodList">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li v-for="food in item.foods" :key="food.name" class="food-item border-1px">
+            <li @click="selectFood(food,$event)" v-for="food in item.foods" :key="food.name"
+                class="food-item border-1px">
               <!--商品图标-->
               <div class="icon">
                 <img :src="food.icon" width="57" height="57"/>
@@ -32,12 +33,12 @@
                   <span>好评率{{food.rating}}%</span>
                 </div>
                 <div class="price">
-                  <span class="now">¥{{food.price}}</span>
-                  <span class="old" v-if="food.oldPrice">¥{{food.oldPrice}}</span>
+                  <span class="now">¥{{food.price}}</span><span class="old" v-if="food.oldPrice">¥{{food.oldPrice}}</span>
                 </div>
               </div>
               <!--购物的按钮组件 cartAdd 监听子组件向我(this)传的值-->
               <div class="cartcontrol-wrapper">
+                <!--cartAdd方法监听cartcontrol里边的添加按钮的点击事件-->
                 <cartcontrol :food="food" @cartAdd="cartAdd"></cartcontrol>
               </div>
             </li>
@@ -48,12 +49,14 @@
     <!--底部购物车组件-->
     <shopcart ref="shopcart" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"
               :selectFoods="selectFoods"></shopcart>
+    <food :food="selectedFood" ref="food" @cartAdd="cartAdd"></food>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import shopcart from '../shopcart/shopcart'
 import cartcontrol from '../cartcontrol/cartcontrol'
+import food from '../food/food'
 import BScroll from 'better-scroll'
 import axios from 'axios'
 
@@ -62,6 +65,7 @@ const RES_OK = 0
 export default {
   name: 'v-goods',
   components: {
+    food,
     shopcart,
     cartcontrol
   },
@@ -75,7 +79,8 @@ export default {
       goods: [],
       classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
       listHeight: [],
-      scrollY: 0
+      scrollY: 0,
+      selectedFood: {}
     }
   },
   watch: {},
@@ -108,6 +113,14 @@ export default {
   mounted() {
   },
   methods: {
+    // 点击食物列表
+    selectFood(food, event) {
+      if (!event._constructed) {
+        return
+      }
+      this.selectedFood = food
+      this.$refs.food.show()
+    },
     cartAdd(targetDom) {
       // 将拿到的这个dom元素传递给shopcart组件
       this._drop(targetDom)

@@ -1,4 +1,4 @@
-export function formatDate (date, fmt) {
+export function formatDate(date, fmt) {
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(
       RegExp.$1,
@@ -24,6 +24,6 @@ export function formatDate (date, fmt) {
   return fmt
 }
 
-function padLeftZero (str) {
+function padLeftZero(str) {
   return ('00' + str).substr(str.length)
 }
