@@ -13,13 +13,15 @@
         <router-link to="/seller">商家</router-link>
       </div>
     </div>
-    <!-- 路由匹配到的组件将渲染在这里 -->
-    <router-view :seller="seller"></router-view>
+    <!-- 路由匹配到的组件将渲染在这里 keep-alive 保存页面状态 -->
+    <keep-alive>
+      <router-view :seller="seller"></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script>
-import VHeader from './components/v-header/v-header'
+import Header from './components/header/header'
 import axios from 'axios'
 
 const RES_OK = 0
@@ -33,7 +35,7 @@ export default {
     }
   },
   components: {
-    'v-header': VHeader
+    'v-header': Header
   },
   created() {
     axios

@@ -17,12 +17,12 @@ const router = new VueRouter({
 })
 
 // 如果开始跳转
-router.beforeEach(function(to, from, next) {
+router.beforeEach(function (to, from, next) {
   next()
 })
 
 // 路由跳转结束
-router.afterEach(function(to, from) {
+router.afterEach(function (to, from) {
 })
 
 /* eslint-disable no-new */

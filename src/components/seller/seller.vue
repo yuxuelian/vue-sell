@@ -1,12 +1,12 @@
 <template>
-  <div class="v-ratings">
-    评论
+  <div class="seller">
+    商家
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'v-ratings',
+  name: 'seller',
   components: {},
   props: {},
   data() {
@@ -18,8 +18,7 @@ export default {
   created() {
   },
   mounted() {
-  },
-  transitions: {}
+  }
 }
 </script>
 

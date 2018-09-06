@@ -1,5 +1,5 @@
 <template>
-  <div class="v-goods">
+  <div class="goods">
     <!--左边分类菜单-->
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
@@ -203,7 +203,7 @@ export default {
 
 <style lang="stylus" scoped>
   @import "../../common/stylus/mixin";
-  .v-goods
+  .goods
     display flex
     overflow hidden
     position absolute

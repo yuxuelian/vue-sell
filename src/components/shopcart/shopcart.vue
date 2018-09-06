@@ -17,7 +17,9 @@
         <div class="desc">另需配送费¥{{deliveryPrice}}元</div>
       </div>
       <div class="content-right">
-        <div class="pay" :class="this.totalPrice<this.minPrice?'no-enough':'enough'">{{payDesc}}
+        <div class="pay"
+             :class="{'enough':totalPrice>=minPrice}">
+          {{payDesc}}
         </div>
       </div>
     </div>
@@ -288,7 +290,7 @@ export default {
           margin-top 12px
           line-height 24px
           box-sizing border-box
-          padding-right 12px
+          padding-right 8px
           border-right 1px solid rgba(255, 255, 255, 0.1)
           font-size 16px
           font-weight 700
@@ -297,20 +299,20 @@ export default {
         .desc
           display inline-block
           vertical-align top
-          margin 12px 0 0 12px
+          margin-top 12px
+          margin-left 6px
           line-height 24px
           font-size 10px
       .content-right
-        flex 0 0 105px
-        width 105px
+        flex 0 0 100px
+        width 100px
         .pay
           height 48px
           text-align center
           line-height 48px
           font-weight 700
           font-size 12px
-          &.not-enough
-            background-color #2b333b
+          background-color #2b333b
           &.enough
             background-color #00b43c
             color white

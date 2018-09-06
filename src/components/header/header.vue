@@ -1,5 +1,5 @@
 <template>
-  <div class="v-header">
+  <div class="header">
     <!-- 内容区 -->
     <div class="content-wrapper">
       <!-- 左侧头像 -->
@@ -116,7 +116,7 @@ export default {
 <style lang="stylus" rel="stylesheet/stylus">
   @import '../../common/stylus/mixin';
 
-  .v-header
+  .header
     color #FFF
     background-color rgba(7, 17, 27, 0.3)
     overflow hidden

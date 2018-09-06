@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Goods from '../components/goods/v-goods'
-import Ratings from '../components/ratings/v-ratings'
-import Seller from '../components/seller/v-seller'
+import Goods from '../components/goods/goods'
+import Ratings from '../components/ratings/ratings'
+import Seller from '../components/seller/seller'
 
 Vue.use(VueRouter)
 
-const routes = [
+export default [
   {
     name: 'Goods',
     path: '/goods',
@@ -35,5 +35,3 @@ const routes = [
     props: true
   }
 ]
-
-export default routes
