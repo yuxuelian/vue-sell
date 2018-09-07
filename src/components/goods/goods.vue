@@ -63,7 +63,7 @@ import axios from 'axios'
 const RES_OK = 0
 
 export default {
-  name: 'v-goods',
+  name: 'goods',
   components: {
     food,
     shopcart,

@@ -125,7 +125,7 @@ export default {
     overflow hidden
     .overview
       display flex
-      padding 18px 0
+      padding 12px 0
     .overview-left
       flex 2
       border-right 1px solid rgba(7, 17, 27, 0.1)

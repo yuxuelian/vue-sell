@@ -301,7 +301,7 @@ export default {
         .rating-wrapper
           .rating-item
             position relative
-            padding 16px 16px
+            padding 16px 18px
             border-1px(rgba(7, 17, 27, 0.1))
             .user
               position absolute
