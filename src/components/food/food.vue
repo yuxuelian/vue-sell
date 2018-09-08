@@ -27,12 +27,12 @@
             </div>
           </transition>
         </div>
-        <splite v-if="food.info"></splite>
+        <split v-if="food.info"></split>
         <div class="info" v-if="food.info">
           <h1 class="title">商品介绍</h1>
           <p class="text">{{food.info}}</p>
         </div>
-        <splite></splite>
+        <split></split>
         <div class="rating">
           <h1 class="title">商品评价</h1>
           <ratingselect
@@ -77,7 +77,7 @@ import Vue from 'vue'
 import BScroll from 'better-scroll'
 import cartcontrol from '../cartcontrol/cartcontrol'
 import {formatDate} from '../../common/js/date'
-import splite from '../splite/splite'
+import split from '../split/split'
 import ratingselect from '../ratingselect/ratingselect'
 
 // eslint-disable-next-line no-unused-vars
@@ -88,7 +88,7 @@ const ALL = 2
 
 export default {
   name: 'food',
-  components: {ratingselect, splite, cartcontrol},
+  components: {ratingselect, split, cartcontrol},
   props: {
     food: {
       type: Object

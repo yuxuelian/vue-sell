@@ -33,6 +33,7 @@
           <span class="text">{{favoriteText}}</span>
         </div>
       </div>
+      <split></split>
     </div>
   </div>
 </template>
@@ -41,10 +42,11 @@
 import BScroll from 'better-scroll'
 import {saveToLocal, loadFromLocal} from '../../common/js/store'
 import star from '../star/star'
+import split from '../split/split'
 
 export default {
   name: 'seller',
-  components: {star},
+  components: {split, star},
   props: {
     seller: {
       type: Object
