@@ -21,7 +21,7 @@ export default {
 }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus" scoped>
   .split
     height 16px
     border-top 1px solid rgba(7, 17, 27, 0.1)

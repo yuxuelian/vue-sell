@@ -87,20 +87,14 @@ export default {
     return {
       classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
       // loadFromLocal从本地获取上次保存的值
-      favorite: (() => loadFromLocal(this.seller.id, 'favorite', false))(),
-      favoriteText: '收藏'
+      favorite: (() => loadFromLocal(this.seller.id, 'favorite', false))()
     }
   },
-  watch: {
-    'seller'() {
-      this._initScroll()
-      this._initPics()
-    },
-    'favorite'() {
-      this.favorite ? this.favoriteText = '已收藏' : this.favoriteText = '收藏'
+  computed: {
+    favoriteText() {
+      return this.favorite ? '已收藏' : '收藏'
     }
   },
-  computed: {},
   methods: {
     // 切换收藏和已收藏
     toggleFavorite(event) {
@@ -139,16 +133,18 @@ export default {
           }
         })
       }
-    },
+    }
   },
   created() {
   },
   mounted() {
+    this._initScroll()
+    this._initPics()
   }
 }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus" scoped>
   @import "../../common/stylus/mixin";
   .seller
     position absolute
