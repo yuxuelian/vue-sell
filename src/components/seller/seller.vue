@@ -95,6 +95,14 @@ export default {
       return this.favorite ? '已收藏' : '收藏'
     }
   },
+  watch: {
+    seller() {
+      this.$nextTick(() => {
+        this._initScroll()
+        this._initPics()
+      })
+    }
+  },
   methods: {
     // 切换收藏和已收藏
     toggleFavorite(event) {
@@ -122,24 +130,24 @@ export default {
         let margin = 6
         let width = (picWidth + margin) * this.seller.pics.length - margin
         this.$refs.picList.style.width = width + 'px'
-        this.$nextTick(() => {
-          if (!this.picScroll) {
-            this.picScroll = new BScroll(this.$refs.picWrapper, {
-              scrollX: true,
-              eventPassthrough: 'vertical'
-            })
-          } else {
-            this.scroll.refresh()
-          }
-        })
+        if (!this.picScroll) {
+          this.picScroll = new BScroll(this.$refs.picWrapper, {
+            scrollX: true,
+            eventPassthrough: 'vertical'
+          })
+        } else {
+          this.scroll.refresh()
+        }
       }
     }
   },
   created() {
   },
   mounted() {
-    this._initScroll()
-    this._initPics()
+    this.$nextTick(() => {
+      this._initScroll()
+      this._initPics()
+    })
   }
 }
 </script>
