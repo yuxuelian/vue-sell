@@ -166,7 +166,6 @@ export default {
           if (response.data.code === RES_OK) {
             // 更新数据，触发dom更新
             this.ratings = response.data.data
-            console.log(this.ratings)
             // 设置dom更新完成回调
             // 初始化滚动
             this.$nextTick(() => {

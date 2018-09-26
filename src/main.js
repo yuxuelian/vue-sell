@@ -3,6 +3,7 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 // 导入路由配置文件 router/index.js
 import routes from './router'
+import 'babel-polyfill'
 
 // 全局导入公共样式
 import './common/stylus/index.styl'
