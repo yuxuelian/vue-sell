@@ -39,7 +39,7 @@ export default {
   },
   created() {
     axios
-      .get('api/sell/seller', {
+      .get('api/seller', {
         params: {}
       })
       .then((response) => {

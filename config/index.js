@@ -11,12 +11,12 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
-        target: 'https://sell.kaibo123.com',
-        //路径重写
-        pathRewrite: {'^/api': '/api'},
-        changeOrigin: true
-      }
+      // '/api': {
+      //   target: 'https://sell.kaibo123.com',
+      //   //路径重写
+      //   pathRewrite: {'^/api': '/api'},
+      //   changeOrigin: true
+      // }
     },
 
     // Various Dev Server settings

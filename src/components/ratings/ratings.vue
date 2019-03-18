@@ -159,7 +159,7 @@ export default {
     // 加载数据
     _loadData() {
       axios
-        .get('/api/sell/ratings', {
+        .get('/api/ratings', {
           params: {}
         })
         .then((response) => {
